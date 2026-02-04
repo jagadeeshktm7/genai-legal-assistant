@@ -3,7 +3,15 @@ from docx import Document
 from PyPDF2 import PdfReader
 import spacy
 
-nlp = spacy.load("en_core_web_sm")
+import spacy
+
+try:
+    nlp = spacy.load("en_core_web_sm")
+except OSError:
+    from spacy.cli import download
+    download("en_core_web_sm")
+    nlp = spacy.load("en_core_web_sm")
+
 
 def extract_text_from_pdf(file):
     reader = PdfReader(file)
@@ -19,3 +27,4 @@ def extract_text_from_docx(file):
 def split_clauses(text):
     clauses = re.split(r'\n|(?<=\.)\s', text)
     return [c.strip() for c in clauses if c.strip()]
+
